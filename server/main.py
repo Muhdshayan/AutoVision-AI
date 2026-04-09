@@ -45,7 +45,7 @@ For a successful identification, use this shape (omit unknown strings as null; n
   "trim": "string or null",
   "body_style": "string or null",
   "exterior_color": "string or null",
-  "estimated_price_pkr": number or null,
+  "estimated_price_pkr": number,
   "notes": "short optional note",
   "confidence": {
     "make": "confirmed|estimated|unknown",
@@ -58,8 +58,7 @@ For a successful identification, use this shape (omit unknown strings as null; n
   }
 }
 
-For estimated_price_pkr, give the estimated price in Pakistani Rupees (PKR). Use Pakistan market prices where possible.
-}"""
+For estimated_price_pkr, you MUST always provide an estimated price in Pakistani Rupees (PKR) based on the Pakistan used-car market. Never return null for this field. Even if you are unsure, provide your best rough estimate and set the confidence to "estimated"."""
 
 
 def _api_key() -> str:
