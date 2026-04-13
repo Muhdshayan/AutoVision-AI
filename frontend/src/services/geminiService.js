@@ -1,11 +1,20 @@
 /**
  * Car analysis runs on the Python backend (venv + google-generativeai).
- * Local dev: `npm run dev` — Vite proxies /api → :8000 (no VITE_API_BASE_URL).
- * Production: set VITE_API_BASE_URL to your API origin, e.g. https://your-api.onrender.com
+ * Local dev: Vite proxies /api → :8000 (relative URL, no env).
+ * Production: VITE_API_BASE_URL overrides; otherwise defaults to deployed Render API.
  */
 
+const DEFAULT_PRODUCTION_API = "https://autovision-ai-axox.onrender.com";
+
+function apiBase() {
+  const fromEnv = (import.meta.env.VITE_API_BASE_URL || "").trim().replace(/\/$/, "");
+  if (fromEnv) return fromEnv;
+  if (import.meta.env.PROD) return DEFAULT_PRODUCTION_API;
+  return "";
+}
+
 function analyzeUrl() {
-  const base = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+  const base = apiBase();
   return `${base}/api/analyze`;
 }
 

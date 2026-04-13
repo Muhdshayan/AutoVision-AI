@@ -166,6 +166,8 @@ app = FastAPI(title="Car Vision API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_cors_origins(),
+    # Vercel preview + production (*.vercel.app) without listing each URL in Render
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
