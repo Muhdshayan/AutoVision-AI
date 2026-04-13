@@ -84,7 +84,9 @@ Open [http://localhost:5173](http://localhost:5173)
 
 In the Render dashboard, set **Environment** variables: `GEMINI_API_KEY` (your key), and `ALLOW_ORIGINS` with your **frontend** URL(s), comma-separated (e.g. `https://your-site.netlify.app`).
 
-**Frontend** — host `frontend` as a static site (Netlify, Cloudflare Pages, Render Static Site, etc.). Build: `npm run build` from `frontend/`, output `frontend/dist`. Set **`VITE_API_BASE_URL`** to your **backend** URL (no trailing slash), e.g. `https://autovision-api.onrender.com`, then rebuild.
+**Frontend** — host `frontend` as a static site (Netlify, Cloudflare Pages, Render Static Site, etc.). Build: `npm run build` from `frontend/`, output `frontend/dist`. Set **`VITE_API_BASE_URL`** to your **backend** URL (no trailing slash), e.g. `https://your-api.onrender.com`, then rebuild.
+
+**Frontend on Vercel:** [vercel.com](https://vercel.com) → New Project → import this GitHub repo → set **Root Directory** to `frontend` → Framework **Vite** (auto). In **Environment Variables**, add `VITE_API_BASE_URL` = your Render API URL (no trailing slash). Add that same Vercel URL to Render’s `ALLOW_ORIGINS`, then redeploy the API. Push to `main` redeploys automatically.
 
 ## AI Flow
 
