@@ -152,13 +152,34 @@ class AnalyzeBody(BaseModel):
     mimeType: str = Field(default="image/jpeg")
 
 
+def _cors_origins() -> list[str]:
+    """Local dev + optional production origins (comma-separated ALLOW_ORIGINS env)."""
+    default = ["http://127.0.0.1:5173", "http://localhost:5173"]
+    extra = os.environ.get("ALLOW_ORIGINS", "").strip()
+    if not extra:
+        return default
+    merged = [*default, *[o.strip() for o in extra.split(",") if o.strip()]]
+    return list(dict.fromkeys(merged))
+
+
 app = FastAPI(title="Car Vision API")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5173", "http://localhost:5173"],
-    allow_methods=["POST", "OPTIONS"],
+    allow_origins=_cors_origins(),
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
+
+
+@app.get("/")
+def root():
+    """So the service URL in a browser is not a bare 404 — only /api/* are API routes."""
+    return {
+        "service": "Car Vision API",
+        "docs": "/docs",
+        "health": "GET /api/health",
+        "analyze": "POST /api/analyze",
+    }
 
 
 @app.get("/api/health")

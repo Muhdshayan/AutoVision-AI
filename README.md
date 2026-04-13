@@ -71,6 +71,21 @@ Open [http://localhost:5173](http://localhost:5173)
 
 > Vite proxies `/api/*` to the Python server, so the API key stays on the backend.
 
+## Deploying (e.g. Render)
+
+**Backend (Web Service)** — this repo’s API is **Python / FastAPI**, not Node.
+
+| Field | Value |
+|--------|--------|
+| **Language** | **Python 3** (not Node) |
+| **Root Directory** | `backend` |
+| **Build Command** | `pip install -r requirements.txt` |
+| **Start Command** | `uvicorn main:app --host 0.0.0.0 --port $PORT` |
+
+In the Render dashboard, set **Environment** variables: `GEMINI_API_KEY` (your key), and `ALLOW_ORIGINS` with your **frontend** URL(s), comma-separated (e.g. `https://your-site.netlify.app`).
+
+**Frontend** — host `frontend` as a static site (Netlify, Cloudflare Pages, Render Static Site, etc.). Build: `npm run build` from `frontend/`, output `frontend/dist`. Set **`VITE_API_BASE_URL`** to your **backend** URL (no trailing slash), e.g. `https://autovision-api.onrender.com`, then rebuild.
+
 ## AI Flow
 
 1. User uploads a car image (JPG, PNG, or WebP).
