@@ -84,9 +84,9 @@ const COLOR_MAP = {
     title: "text-red-800",
   },
   orange: {
-    bg: "bg-orange-50",
+    bg: "bg-brand-orange-light",
     border: "border-orange-200",
-    icon: "text-orange-500",
+    icon: "text-brand-orange",
     title: "text-orange-800",
   },
 };

@@ -24,7 +24,22 @@ function readFileAsBase64(file) {
 
 const ACCEPT = "image/jpeg,image/png,image/webp";
 
-export default function ImageUpload({ onImageSelect, isLoading }) {
+const styles = {
+  default: {
+    btn: "border-2 border-dashed border-gray-200 bg-white rounded-2xl p-10 text-center hover:border-brand-orange hover:bg-brand-orange-light transition cursor-pointer disabled:opacity-50 shadow-sm",
+    iconWrap: "bg-brand-orange-light group-hover:bg-brand-orange/10",
+    title: "font-medium text-gray-700",
+    hint: "text-xs text-gray-400 mt-1",
+  },
+  hero: {
+    btn: "border border-white/20 bg-gray-950/65 backdrop-blur-md rounded-2xl p-8 sm:p-10 text-center hover:border-brand-orange/60 hover:bg-gray-900/75 transition cursor-pointer disabled:opacity-50 shadow-xl shadow-black/30",
+    iconWrap: "bg-brand-orange/20 group-hover:bg-brand-orange/30",
+    title: "font-medium text-white",
+    hint: "text-xs text-gray-400 mt-1",
+  },
+};
+
+export default function ImageUpload({ onImageSelect, isLoading, variant = "default" }) {
   const inputRef = useRef(null);
 
   const processFile = useCallback(
@@ -57,8 +72,10 @@ export default function ImageUpload({ onImageSelect, isLoading }) {
     if (file) void processFile(file);
   };
 
+  const s = styles[variant] ?? styles.default;
+
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full">
       <input
         ref={inputRef}
         type="file"
@@ -73,15 +90,17 @@ export default function ImageUpload({ onImageSelect, isLoading }) {
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
         onDrop={onDrop}
-        className="group w-full max-w-md border-2 border-dashed border-gray-200 rounded-2xl p-10 text-center hover:border-blue-400 hover:bg-blue-50/50 transition cursor-pointer disabled:opacity-50"
+        className={`group w-full max-w-md ${s.btn}`}
       >
         <div className="flex flex-col items-center gap-3">
-          <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition">
-            <Upload className="w-7 h-7 text-blue-600" />
+          <div
+            className={`w-14 h-14 rounded-full flex items-center justify-center transition ${s.iconWrap}`}
+          >
+            <Upload className="w-7 h-7 text-brand-orange" />
           </div>
           <div>
-            <p className="font-medium text-gray-700">Drop a photo here or click to upload</p>
-            <p className="text-xs text-gray-400 mt-1">JPG, PNG, or WebP</p>
+            <p className={s.title}>Drop a photo here or click to upload</p>
+            <p className={s.hint}>JPG, PNG, or WebP</p>
           </div>
         </div>
       </button>

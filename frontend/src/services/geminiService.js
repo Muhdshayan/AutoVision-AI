@@ -1,6 +1,6 @@
 /**
  * Car analysis runs on the Python backend (venv + google-generativeai).
- * Start API: python -m uvicorn server.main:app --reload --port 8000
+ * Start API: python -m uvicorn backend.main:app --reload --port 8000
  * Then: npm run dev (Vite proxies /api → :8000)
  */
 

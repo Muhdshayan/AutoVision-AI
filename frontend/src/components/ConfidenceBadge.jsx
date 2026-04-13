@@ -5,12 +5,12 @@ const CONFIG = {
   confirmed: {
     label: "Confirmed",
     icon: ShieldCheck,
-    classes: "bg-green-100 text-green-700 border-green-200",
+    classes: "bg-green-50 text-green-700 border-green-200",
   },
   estimated: {
     label: "Estimated",
     icon: AlertTriangle,
-    classes: "bg-yellow-100 text-yellow-700 border-yellow-200",
+    classes: "bg-brand-orange-light text-orange-700 border-orange-200",
   },
   unknown: {
     label: "Unknown",

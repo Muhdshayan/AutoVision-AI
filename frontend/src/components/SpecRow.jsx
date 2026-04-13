@@ -10,7 +10,7 @@ export default function SpecRow({ label, value, confidence }) {
       </span>
       <div className="flex items-center gap-2 flex-wrap justify-end">
         <span
-          className={`text-sm font-medium ${isEmpty ? "text-gray-300 italic" : "text-gray-800"}`}
+          className={`text-sm font-medium ${isEmpty ? "text-gray-300 italic" : "text-gray-900"}`}
         >
           {isEmpty ? "Not identified" : value}
         </span>
