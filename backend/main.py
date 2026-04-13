@@ -1,6 +1,6 @@
 """
 Gemini proxy: uses google-generativeai from your venv (same stack as scripts/test_gemini_key.py).
-Run: python -m uvicorn server.main:app --reload --port 8000
+Run from repo root: python -m uvicorn backend.main:app --reload --port 8000
 """
 from __future__ import annotations
 
@@ -40,12 +40,20 @@ Use partial_car when the vehicle is heavily cropped, only half (or a small part)
 For a successful identification, use this shape (omit unknown strings as null; numbers as numbers; confidence per field: "confirmed", "estimated", or "unknown"):
 {
   "make": "string or null",
-  "model": "string or null",
+  "model": "string or null (primary nameplate / model family, e.g. Civic, Corolla, Z4)",
   "year": "string or null (single year like '2021' or range like '2019-2021')",
-  "trim": "string or null",
-  "body_style": "string or null",
+  "trim": "string or null (refine variant / package: e.g. LX, Touring, M Sport — from badging when visible)",
+  "body_style": "string or null (e.g. Sedan, SUV, Hatchback, Coupe, Roadster, Truck)",
   "exterior_color": "string or null",
+  "fuel_type": "string or null (e.g. Petrol, Diesel, Electric, Hybrid, Plug-in hybrid)",
+  "transmission": "string or null (e.g. Automatic, Manual, CVT, DCT — use interior/paddles/shifter if visible; else typical for this model or unknown)",
+  "engine_displacement": "string or null (e.g. '2.0 L', '1998 cc' from rear badge or typical engine for trim; else estimated or null)",
+  "drivetrain": "string or null (e.g. FWD, RWD, AWD, 4WD — from badges like quattro/4MATIC/xDrive when visible; else typical or unknown)",
+  "door_count": "string or null (e.g. '2', '4', '5-door' from visible doors/body style)",
+  "seat_count": "string or null (e.g. '2', '5', '7' — infer from body type when interior not visible)",
   "estimated_price_pkr": number,
+  "estimated_price_min_pkr": number or null (optional low end of rough range; null if giving only a point estimate)",
+  "estimated_price_max_pkr": number or null (optional high end of rough range; null if giving only a point estimate)",
   "notes": "short optional note",
   "confidence": {
     "make": "confirmed|estimated|unknown",
@@ -54,11 +62,21 @@ For a successful identification, use this shape (omit unknown strings as null; n
     "trim": "confirmed|estimated|unknown",
     "body_style": "confirmed|estimated|unknown",
     "exterior_color": "confirmed|estimated|unknown",
-    "estimated_price_pkr": "confirmed|estimated|unknown"
+    "fuel_type": "confirmed|estimated|unknown",
+    "transmission": "confirmed|estimated|unknown",
+    "engine_displacement": "confirmed|estimated|unknown",
+    "drivetrain": "confirmed|estimated|unknown",
+    "door_count": "confirmed|estimated|unknown",
+    "seat_count": "confirmed|estimated|unknown",
+    "estimated_price_pkr": "confirmed|estimated|unknown",
+    "estimated_price_min_pkr": "confirmed|estimated|unknown",
+    "estimated_price_max_pkr": "confirmed|estimated|unknown"
   }
 }
 
-For estimated_price_pkr, you MUST always provide an estimated price in Pakistani Rupees (PKR) based on the Pakistan used-car market. Never return null for this field. Even if you are unsure, provide your best rough estimate and set the confidence to "estimated"."""
+Infer fuel_type, transmission, drivetrain, engine_displacement, door_count, and seat_count from the photo when possible; otherwise infer from the identified make/model/year for Pakistan market and set confidence to "estimated" or "unknown". Transmission is often unknown from exterior-only photos — prefer "unknown" over wild guesses.
+
+For estimated_price_pkr you MUST always provide a point estimate in PKR (Pakistan used-car market). Optionally set estimated_price_min_pkr and estimated_price_max_pkr to a plausible range when uncertain; use null for min/max when you only give a single point estimate."""
 
 
 def _api_key() -> str:
