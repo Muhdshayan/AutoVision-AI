@@ -263,7 +263,7 @@ function ResultsCarousel({ items, activeSlide, onSlideChange, onRetry }) {
           </>
         )}
         <div
-          className="overflow-hidden rounded-2xl"
+          className="w-full min-w-0 overflow-hidden rounded-2xl"
           onTouchStart={(e) => {
             touchStartX.current = e.changedTouches[0].clientX;
           }}
@@ -278,11 +278,16 @@ function ResultsCarousel({ items, activeSlide, onSlideChange, onRetry }) {
           }}
         >
           <div
-            className="flex transition-transform duration-300 ease-out motion-reduce:transition-none"
-            style={{ transform: `translate3d(-${activeSlide * 100}%, 0, 0)` }}
+            className="flex w-full transition-transform duration-300 ease-out motion-reduce:transition-none"
+            style={{
+              transform: `translate3d(-${total > 0 ? (activeSlide * 100) / total : 0}%, 0, 0)`,
+            }}
           >
             {items.map((it, idx) => (
-              <div key={it.id} className="w-full shrink-0">
+              <div
+                key={it.id}
+                className="w-full min-w-0 shrink-0 grow-0 basis-full"
+              >
                 <ResultCard
                   index={idx + 1}
                   item={it}
