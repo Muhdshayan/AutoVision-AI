@@ -11,6 +11,7 @@ import BrandMark from "./BrandMark";
 import ImageUpload from "./ImageUpload";
 import CarListing from "./CarListing";
 import ErrorCard from "./ErrorCard";
+import AnalysisProcessing from "./AnalysisProcessing";
 import { analyzeCarImage } from "../services/geminiService";
 
 const CONCURRENCY = 2;
@@ -222,6 +223,7 @@ const SWIPE_THRESHOLD_PX = 50;
 
 function ResultsCarousel({ items, activeSlide, onSlideChange, onRetry }) {
   const total = items.length;
+  const activeItem = items[activeSlide];
   const touchStartX = useRef(null);
   const canPrev = activeSlide > 0;
   const canNext = activeSlide < total - 1;
@@ -236,6 +238,8 @@ function ResultsCarousel({ items, activeSlide, onSlideChange, onRetry }) {
 
   const navBtnClass =
     "absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/55 text-white shadow-lg backdrop-blur-sm transition hover:bg-black/70 disabled:pointer-events-none disabled:opacity-30";
+
+  if (!activeItem) return null;
 
   return (
     <div className="space-y-4">
@@ -278,23 +282,14 @@ function ResultsCarousel({ items, activeSlide, onSlideChange, onRetry }) {
           }}
         >
           <div
-            className="flex w-full transition-transform duration-300 ease-out motion-reduce:transition-none"
-            style={{
-              transform: `translate3d(-${total > 0 ? (activeSlide * 100) / total : 0}%, 0, 0)`,
-            }}
+            key={`${activeItem.id}-${activeSlide}`}
+            className="animate-carousel-swap"
           >
-            {items.map((it, idx) => (
-              <div
-                key={it.id}
-                className="w-full min-w-0 shrink-0 grow-0 basis-full"
-              >
-                <ResultCard
-                  index={idx + 1}
-                  item={it}
-                  onRetry={() => onRetry(it.id)}
-                />
-              </div>
-            ))}
+            <ResultCard
+              index={activeSlide + 1}
+              item={activeItem}
+              onRetry={() => onRetry(activeItem.id)}
+            />
           </div>
         </div>
       </div>
@@ -364,28 +359,18 @@ function SummaryBar({ total, successCount, errorCount, busyCount, isAnalyzing })
 function ResultCard({ item, index, onRetry }) {
   if (item.status === "loading" || item.status === "queued") {
     return (
-      <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/45 shadow-lg backdrop-blur-md">
-        <div className="relative h-48 bg-gray-900 sm:h-56">
-          {item.previewUrl && (
-            <img
-              src={item.previewUrl}
-              alt={item.fileName}
-              className="h-full w-full object-cover opacity-60 blur-[1px]"
-            />
-          )}
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/30 text-white">
-            <Loader2 className="h-7 w-7 animate-spin text-brand-orange" />
-            <span className="text-sm font-medium">
-              {item.status === "queued" ? "Queued…" : "Analyzing…"}
-            </span>
-          </div>
-          <span className="absolute left-2 top-2 inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-black/70 px-1.5 text-xs font-semibold text-white">
-            #{index}
-          </span>
-        </div>
-        <div className="truncate px-4 py-3 text-xs text-gray-300">
+      <div className="relative">
+        <span className="absolute left-3 top-3 z-20 inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-black/70 px-1.5 text-xs font-semibold text-white">
+          #{index}
+        </span>
+        <AnalysisProcessing
+          key={`${item.id}-${item.status}`}
+          previewUrl={item.previewUrl}
+          isQueued={item.status === "queued"}
+        />
+        <p className="mt-2 truncate text-center text-xs text-gray-400">
           {item.fileName}
-        </div>
+        </p>
       </div>
     );
   }
