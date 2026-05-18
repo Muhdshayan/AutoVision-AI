@@ -17,24 +17,26 @@ const STEPS = [
   { id: 4, label: "Computing market estimate", icon: LineChart },
 ];
 
-export default function AnalysisProcessing({ previewUrl }) {
+export default function AnalysisProcessing({ previewUrl, isQueued = false }) {
   const [activeStep, setActiveStep] = useState(0);
   const [pulse, setPulse] = useState(0);
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(() => (isQueued ? 12 : 0));
 
   useEffect(() => {
+    if (isQueued) return;
     const stepTimer = setInterval(() => {
       setActiveStep((s) => (s < STEPS.length - 1 ? s + 1 : s));
     }, 1100);
     return () => clearInterval(stepTimer);
-  }, []);
+  }, [isQueued]);
 
   useEffect(() => {
+    if (isQueued) return;
     const p = setInterval(() => {
       setProgress((v) => (v >= 92 ? 92 : v + Math.random() * 8 + 2));
     }, 280);
     return () => clearInterval(p);
-  }, []);
+  }, [isQueued]);
 
   useEffect(() => {
     const t = setInterval(() => setPulse((p) => (p + 1) % 1000), 50);
@@ -50,7 +52,7 @@ export default function AnalysisProcessing({ previewUrl }) {
         <div className="flex items-center gap-2 text-brand-orange">
           <Sparkles className="h-5 w-5 animate-pulse" />
           <span className="text-sm font-semibold tracking-wide uppercase">
-            AI Vision pipeline
+            {isQueued ? "In queue" : "AI Vision pipeline"}
           </span>
           <Sparkles className="h-5 w-5 animate-pulse" />
         </div>
@@ -148,8 +150,9 @@ export default function AnalysisProcessing({ previewUrl }) {
         </ul>
 
         <p className="text-center text-xs text-gray-500">
-          Gemini is analyzing your photo — results appear as a saved listing + JSON
-          when ready.
+          {isQueued
+            ? "Your photo will start analyzing in a moment."
+            : "Gemini is analyzing your photo — results appear as a saved listing + JSON when ready."}
         </p>
       </div>
     </div>
