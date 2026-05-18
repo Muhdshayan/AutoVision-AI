@@ -16,8 +16,8 @@ import { analyzeCarImage } from "../services/geminiService";
 
 const CONCURRENCY = 2;
 
-/** Decorative background — local car photo (blurred) */
-const BG_CAR_IMAGE = "/assets/images/tyler-clemmensen-d1Jum1vVLew-unsplash.jpg";
+/** Decorative background — Wowcar hero banner (blurred) */
+const BG_CAR_IMAGE = "/assets/images/wow-car-banner.jpg";
 
 function classifyError(err) {
   const msg = err?.message ?? "";
