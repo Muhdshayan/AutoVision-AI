@@ -3,7 +3,7 @@ import { Upload, X, Plus, Sparkles } from "lucide-react";
 
 const ACCEPT = "image/jpeg,image/png,image/webp";
 const ALLOWED = ["image/jpeg", "image/png", "image/webp"];
-const MAX_FILES = 5;
+const MAX_FILES = 20;
 
 function readFileAsBase64(file) {
   return new Promise((resolve, reject) => {

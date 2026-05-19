@@ -220,7 +220,7 @@ export default function App() {
                 <span className="text-brand-orange">instantly</span>
               </h2>
               <p className="text-base sm:text-lg text-gray-300 max-w-xl mx-auto lg:mx-0">
-                Upload up to 5 photos — our AI reads each vehicle and builds a
+                Upload up to 20 photos — our AI reads each vehicle and builds a
                 full listing with specs, fuel type, and an estimated price.
               </p>
             </div>
